@@ -1,36 +1,52 @@
-import os            #libreria de funciones del sistema operativo
+#!/usr/bin/env python3
+
+import os            #libreria de funciones del sistema operativo --> https://docs.python.org/3/library/os.html
 import sys
 import cmd
+import shutil
+
+
 
 class shellSO1(cmd.Cmd):
     intro='Este es el shell de SO1'
     prompt='(SO1shell) $'
     file= None
 
+    #lo que es path puede ser un string
+    #para los comandos que ya existen se usa os.system()
+
     #1. 	Copiar ( no puede ser una llamada a sistema a la función cp) - copiar
     def do_copiar(self,arg):
         'Copia de un lugar a otro'
+        #shutil.copy(src, dst, *, follow_symlinks=True)
         print('Con este comando se copia')
     #2. 	Mover - mover
     def do_mover(self,arg):
         print('Con este comando se mueve')
     #3. 	Renombrar - renombrar
     def do_renombrar(self,arg):
+        #os.rename(src, dst, *, src_dir_fd=None, dst_dir_fd=None)
         print('Con este comando se renombra')
     #4. 	Listar un directorio (no puede ser una llamada a sistema a la función ls) - listar
     def do_listar(self,arg):
+        #os.listdir(path='.')
         print('Con este comando se lista')
     #5. 	Crear un directorio - creardir
     def do_creardir(self,arg):
+        #os.mkdir(path, mode=0o777, *, dir_fd=None)
         print('Con este comando se crea un directorio')
     #6. 	Cambiar de directorio (no puede ser una llamada a sistema a la función cd) - ir
     def do_ir(self,arg):
+        #os.chdir(path)
         print('Con este comando se cambia de directorio')
     #7. 	Cambiar los permisos sobre un archivo o un conjunto de archivos - permisos
     def do_permisos(self,arg):
+        #os.chmod(path, mode, *, dir_fd=None, follow_symlinks=True)
         print('Con este comando se cambian permisos')
     #8. 	Cambiar los propietarios sobre un archivo o un conjunto de archivos. - propietario
     def do_propietario(self,arg):
+        #os.chown(path, uid, gid, *, dir_fd=None, follow_symlinks=True)
+        #shutil.chown(path, user=None, group=None) --> es de mas alto nivel que el de os
         print('Con este comando se cambian propietarios')
     #9. 	Cambiar la contraseña - contraseña
     def do_contraseña(self,arg):
