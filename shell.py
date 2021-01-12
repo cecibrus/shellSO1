@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 
 import os            #libreria de funciones del sistema operativo --> https://docs.python.org/3/library/os.html
-import sys
-import cmd
+import sys           #libreria del sistema
+import cmd           #libreria para el formato de terminal
 import shutil
 import subprocess
 import getpass
+import signal
+import datetime
 
 #todos los comandos se deben poner en bloques de try except en caso de que salten errores,
 #para que no muera todo el programa
 
 class shellSO1(cmd.Cmd):
-    intro=""" Bienvenidos a 
+    intro=""" 
              _______  ______   _____     _______  ___   ___  _____  ___    ___
             |       ||      | /_    |   |       ||   | |   ||     ||   |  |   |
             |   ____||  __  |   |   |   |   ____||   |_|   || ____||   |  |   |
@@ -61,7 +63,8 @@ class shellSO1(cmd.Cmd):
         'No necesita argumentos, basta con introducir solo el comando'
         try:
             lista=os.listdir(path='.')
-            print (lista)
+            for x in lista:
+                print(x)
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help listar')
         print('Con este comando se lista')
@@ -111,16 +114,39 @@ class shellSO1(cmd.Cmd):
     def do_usuario(self,arg):
         'Añade un nuevo usuario. Ejemplo: usuario <nuevoNombre>'
         try:
-            comandou='useradd '+arg
+            args=parse(arg)
+            comandou='useradd ' + args[0] #se agrega el usuario con solo su direccion ip, los datos personales se registran en otro log
             os.system(comandou)
+            mensajeUsuario = 'user: '
+            for x in args:
+                #se prepara el mensaje que se escribira en el log
+                mensajeUsuario = mensajeUsuario + ' ' + x
+            print(comandou)
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help usuario')
+        
         print('Con este comando se crea un usuario')
     #11.  El usuario debe poder levantar y apagar demonios dentro del sistema, utilizando una herramienta como service de CentOS. (no puede ser una llamada a sistema a la función service o systemctl)
     def do_demonio(self,arg):
-        'Levana o apaga demonios. Necesita como parametro la accion y el ID de proceso. Ejemplo: demonio levantar/apagar <PID>'
+        'Levanta o apaga demonios. Necesita como parametro la accion y el ID de proceso. Ejemplo: demonio levantar/apagar <PID>'
         #se tienen que tener mas parametros como levantar y apagar
-        print('hola demonio')
+        try:
+            args=parse(arg)
+            if(args[0]=='levantar'):
+                try:
+                    subprocess.Popen(args[1])
+                except Exception:
+                    print('Ocurrio un error o el parametro introducido es invalido. Vea la ayuda con help demonio')
+            elif(args[0]=='apagar'):
+                try:
+                    #SIGKILL no puede ser ignorado, SIGTERM si
+                    os.kill(args[1], signal.SIGTERM)
+                    os.kill(args[1], signal.SIGKILL)
+                except Exception:
+                    print('Ocurrio un error o el parametro introducido es invalido. Vea la ayuda con help demonio')
+        except Exception:
+            print('Ocurrio un error o el comando se utilizo incorrectamente. Vea la ayuda con help demonio')
+
         #os.kill para apagar, se necesita el id de proceso
         #investigar como levantar --> subprocess.Popen
     #12.  Proveer la capacidad de poder ejecutar comandos del sistema, que no sean los comandos mencionados arriba.
@@ -130,18 +156,38 @@ class shellSO1(cmd.Cmd):
         output = os.popen(arg).read()
         print (output)
         #creo que no necesita manejo de errores ya que se hace solo
-    #13.  Registrar el inicio de sesión y la salida sesión del usuario. Se puede comparar con los registros de su horario cada vez que inicia/cierra la sesión y si esta fuera del rango escribir en el archivo de log (usuario_horarios_log) un mensaje que aclare que está fuera del rango y deben agregar el lugar desde donde realizó la conexión que también puede estar fuera de sus IPs habilitado.
-    def registroUsuario():
-        print("aca se registran las actividades del usuario")
-        #se agrega la hora y la fecha
-        #tambien se tienen que tener las IPs
+
     #14.  Ejecutar una transferencia por ftp o scp, se debe registrar en el log Shell_transferencias del usuario. 
     def do_transferencia(self,arg):
+        'Hace una transferencia ftp o scp'
         print("ftp o scp")
         #se debe revisar tambien si tiene otros parametros, como ftp o scp y de acuerdo a eso ver
+
+#registro del login del usuario
+def registroLogin():
+    user = getpass.getuser()
+    fecha=datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
+    mensaje='login' user + ' ' + fecha
+    #f=open('/var/log/login.log', 'a')
+
+
+ #13.  Registrar el inicio de sesión y la salida sesión del usuario. Se puede comparar con los registros de su horario cada vez que inicia/cierra la sesión y si esta fuera del rango escribir en el archivo de log (usuario_horarios_log) un mensaje que aclare que está fuera del rango y deben agregar el lugar desde donde realizó la conexión que también puede estar fuera de sus IPs habilitado.
+def registroUsuario():
+    print("aca se registran las actividades del usuario")
+    #se agrega la hora y la fecha
+    #tambien se tienen que tener las IPs
+
+#funcion para escribir en el log los comandos
+def registroLog():
+    print('Registro log')
+
+#funcion para registro del log de los errores
+def registroErrores():
+    print('Registro Errores')
 
 def parse(arg):
     return tuple(arg.split())
 
 if __name__=='__main__':
+    shellSO1.registroLogin()
     shellSO1().cmdloop()
