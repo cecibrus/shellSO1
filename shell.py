@@ -210,17 +210,38 @@ class shellSO1(cmd.Cmd):
         comando= ' shell ' + arg
         #creo que no necesita manejo de errores ya que se hace solo
 
-    #14.  Ejecutar una transferencia por ftp o scp, se debe registrar en el log Shell_transferencias del usuario. 
+   #14.  Ejecutar una transferencia por ftp o scp, se debe registrar en el log Shell_transferencias del usuario. 
     def do_transferencia(self,arg):
-        'Hace una transferencia ftp o scp'
-        print("ftp o scp")
-        #se debe revisar tambien si tiene otros parametros, como ftp o scp y de acuerdo a eso ver
+        'Hace una transferencia ftp o scp. Por ejemplo  transferencia {ftp | scp}  <PARAMS>'
+        #print("ftp o scp")
+        comando = ' transferencia ' + arg
+        try:
+          os.system(arg)
+          registroLog(comando)
+          #registroTransferencia(comando)
+        except Exception:
+            print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help transferencia')
+            registroErrores(comando)
+
+ '''def do_apagar(self):
+        'Cierra sesion y apaga la maquina'
+        comando = ' apagar '
+        subprocess.Popen(['shutdown', '-r', '0'])
+        registroLog(comando)
+
+
+    def do_reiniciar(self):
+        'Reinicia la maquina'
+        comando = ' reiniciar '
+        subprocess.Popen(['shutdown', '-h', '0'])
+        registroLog(comando)'''
+
 
 #registro del login del usuario
 def registroLogin():
     user = getpass.getuser()
     fecha=datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
-    mensaje='login' + user + ' ' + fecha
+    mensaje='login' + user + ' ' + fecha + '\n'
     f=open('/var/log/login.log', 'a')
     f.write(mensaje)
     f.close()
@@ -242,7 +263,7 @@ def registroUsuario(args):
 #funcion para escribir en el log los comandos
 def registroLog(command):
     fecha=datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
-    mensaje= fecha + command
+    mensaje= fecha + command + '\n'
     f=open('/var/log/registro.log', 'a')
     f.write(mensaje)
     f.close()
@@ -251,7 +272,7 @@ def registroLog(command):
 #funcion para registro del log de los errores
 def registroErrores(command):
     fecha=datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
-    mensaje= fecha + command
+    mensaje= fecha + command + '\n'
     f=open('/var/log/registroerror.log', 'a')
     f.write(mensaje)
     f.close()
