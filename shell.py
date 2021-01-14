@@ -173,7 +173,7 @@ class shellSO1(cmd.Cmd):
         print('Con este comando se crea un usuario')
     #11.  El usuario debe poder levantar y apagar demonios dentro del sistema, utilizando una herramienta como service de CentOS. (no puede ser una llamada a sistema a la función service o systemctl)
     def do_demonio(self,arg):
-        'Levanta o apaga demonios. Necesita como parametro la accion y el ID de proceso. Ejemplo: demonio levantar/apagar <PID>'
+        'Levanta o apaga demonios. Necesita como parametro la accion y el ID de proceso en caso de apagar, y el archivo a ejecutar en caso de levantar. Ejemplo: demonio levantar/apagar <PID>'
         #se tienen que tener mas parametros como levantar y apagar
         comando= ' demonio ' + arg
         try:
@@ -182,16 +182,19 @@ class shellSO1(cmd.Cmd):
                 try:
                     subprocess.Popen(args[1])
                     registroLog(comando)
-                except Exception:
+                except Exception as e:
+                    print(e)
                     print('Ocurrio un error o el parametro introducido es invalido. Vea la ayuda con help demonio')
                     registroErrores(comando)
             elif(args[0]=='apagar'):
                 try:
-                    #SIGKILL no puede ser ignorado, SIGTERM si
-                    os.kill(args[1], signal.SIGTERM)
-                    os.kill(args[1], signal.SIGKILL)
+                #SIGKILL no puede ser ignorado, SIGTERM si
+                    pid=int(args[1])
+                    os.kill(pid, signal.SIGTERM)
+                    os.kill(pid, signal.SIGKILL)
                     registroLog(comando)
-                except Exception:
+                except Exception as e:
+                    print(e)
                     print('Ocurrio un error o el parametro introducido es invalido. Vea la ayuda con help demonio')
                     registroErrores(comando)
         except Exception:
@@ -228,8 +231,6 @@ class shellSO1(cmd.Cmd):
         comando = ' apagar '
         subprocess.Popen(['shutdown', '-r', '0'])
         registroLog(comando)
-
-
     def do_reiniciar(self):
         'Reinicia la maquina'
         comando = ' reiniciar '
@@ -246,6 +247,7 @@ def registroLogin():
     f.write(mensaje)
     f.close()
     print(mensaje)
+    # hay que registrar en usuario_horarios_log si entra fuera de su horario
 
 
  #13.  Registrar el inicio de sesión y la salida sesión del usuario. Se puede comparar con los registros de su horario cada vez que inicia/cierra la sesión y si esta fuera del rango escribir en el archivo de log (usuario_horarios_log) un mensaje que aclare que está fuera del rango y deben agregar el lugar desde donde realizó la conexión que también puede estar fuera de sus IPs habilitado.
@@ -254,9 +256,13 @@ def registroUsuario(args):
     #args[2]-> hora de salida
     #args[3]-> IP, hasta args[len(args)-1]
     print("aca se registran las actividades del usuario")
+    #mensaje='usuario: ' + args[0] + '\n horaEntrada:' + args[1] + '\n horaSalida: ' + args[2]
+    #for x in range(3:len(args)-1):
+    #    mensaje=mensaje + 
     f=open('/var/log/usuario.log', 'a')
     f.write(mensaje)
     f.close()
+    f.write()
     #se agrega la hora y la fecha
     #tambien se tienen que tener las IPs
 
@@ -273,7 +279,7 @@ def registroLog(command):
 def registroErrores(command):
     fecha=datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
     mensaje= fecha + command + '\n'
-    f=open('/var/log/registroerror.log', 'a')
+    f=open('/var/log/shell/sistema_error.log', 'a')
     f.write(mensaje)
     f.close()
     print(mensaje)
