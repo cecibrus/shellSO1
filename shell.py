@@ -14,15 +14,15 @@ import datetime
 
 class shellSO1(cmd.Cmd):
     intro=""" 
-             _______  ______   _____     _______  ___   ___  _____  ___    ___
-            |       ||      | /_    |   |       ||   | |   ||     ||   |  |   |
-            |   ____||  __  |   |   |   |   ____||   |_|   || ____||   |  |   |
-             \  \    | |  | |   |   |    \  \    |         || |___ |   |  |   |
-              \  \   | |  | |   |   |     \  \   |    _    ||  ___||   |_ |   |_
-             __\  \  | |__| |  _|   |_   __\  \  |   | |   || |___ |     ||     |
-            |      | |      | |       | |      | |   | |   ||     ||     ||     |
-            |______| |______| |_______| |______| |___| |___||_____||_____||_____|
-            
+         _______  ______   _____     _______  ___   ___  _____  ___    ___
+        |       ||      | /_    |   |       ||   | |   ||     ||   |  |   |
+        |   ____||  __  |   |   |   |   ____||   |_|   || ____||   |  |   |
+         \  \    | |  | |   |   |    \  \    |         || |___ |   |  |   |
+          \  \   | |  | |   |   |     \  \   |    _    ||  ___||   |_ |   |_
+         __\  \  | |__| |  _|   |_   __\  \  |   | |   || |___ |     ||     |
+        |      | |      | |       | |      | |   | |   ||     ||     ||     |
+        |______| |______| |_______| |______| |___| |___||_____||_____||_____|
+
         Trabajo de Sistemas Operativos 1. Cecilia Brusquetti y Gricelda Valdez
             """
     prompt='(SO1shell) $'
@@ -41,8 +41,6 @@ class shellSO1(cmd.Cmd):
         except Exception:
             print("Ocurrio algun error o el comando no se esta utilizando correctamente. Vea la ayuda con help copiar")
             registroErrores(comando)
-        
-        print('Con este comando se copia')
     #2. 	Mover - mover
     def do_mover(self,arg):
         #este si puede ser una llamada al sistema de la funcion mv 
@@ -55,8 +53,6 @@ class shellSO1(cmd.Cmd):
         except Exception:
             print("Ocurrio algun error o el comando no se esta utilizando correctamente. Vea la ayuda con help mover")
             registroErrores(comando)
-
-        print('Con este comando se mueve')
     #3. 	Renombrar - renombrar
     def do_renombrar(self,arg):
         'Necesita dos argumentos, el nombre actual y el nombre nuevo. Ejemplo> renombrar <archivo> <nombrenuevo>'
@@ -67,8 +63,6 @@ class shellSO1(cmd.Cmd):
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help renombrar')
             registroErrores(comando)
-        
-        print('Con este comando se renombra')
     #4. 	Listar un directorio (no puede ser una llamada a sistema a la función ls) - listar
     def do_listar(self,arg):
         'No necesita argumentos, basta con introducir solo el comando'
@@ -86,8 +80,6 @@ class shellSO1(cmd.Cmd):
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help listar')
             registroErrores(comando)
-
-        print('Con este comando se lista')
     #5. 	Crear un directorio - creardir
     def do_creardir(self,arg):
         'Se necesita el nombre del directorio a ser creado, y es opcional una direccion. Ejemplo: creardir <nombre> </ejemplo/ejemplo2>'
@@ -103,7 +95,6 @@ class shellSO1(cmd.Cmd):
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help creardir')
             registroErrores(comando)
-        print('Con este comando se crea un directorio')
     #6. 	Cambiar de directorio (no puede ser una llamada a sistema a la función cd) - ir
     def do_ir(self,arg):
         'Se necesita la direccion del directorio al que se quiere cambiar'
@@ -118,7 +109,6 @@ class shellSO1(cmd.Cmd):
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help ir')
             registroErrores(comando)
-        print('Con este comando se cambia de directorio')
     #7. 	Cambiar los permisos sobre un archivo o un conjunto de archivos - permisos
     def do_permisos(self,arg):
         'Cambia los permisos de un archivo. Se debe pasar el nombre del archivo y el modo. Ejemplo: permisos <archivo> <777>'
@@ -129,7 +119,6 @@ class shellSO1(cmd.Cmd):
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help permisos')
             registroErrores(comando)
-        print('Con este comando se cambian permisos')
     #8. 	Cambiar los propietarios sobre un archivo o un conjunto de archivos. - propietario
     def do_propietario(self,arg):
         'Cambia el propietario de un archivo o un grupo de archivos. Ejemplo propietario <direccion> <nuevoPropietario>'
@@ -141,7 +130,6 @@ class shellSO1(cmd.Cmd):
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help propietario')
             registroErrores(comando)
-        print('Con este comando se cambian propietarios')
     #9. 	Cambiar la contraseña - contraseña
     def do_contrasenha(self,arg):
         'Cambia la contrasenha del usuario. Es necesario introducir solo el comando'
@@ -152,7 +140,6 @@ class shellSO1(cmd.Cmd):
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help contrasenha')
             registroErrores(comando)
-        print('Con este comando se cambia la contrasenha')
     #10.  Agregar usuario, y deben registrar los datos personales del mismo incluyendo su horario de trabajo y posibles lugares de conexión (ejemplo IPs o localhost). - usuario
     def do_usuario(self,arg):
         'Añade un nuevo usuario. Ejemplo: usuario <nuevoNombre>. Tambien se pueden agregar mas datos como horario de entrada y salida, y posibles direcciones de conexiones IP. Ejemplo: usuario <nombreUsuario> <horaEntrada> <horaSalida> <IP1> ... <IPn> en ese orden.'
@@ -169,8 +156,6 @@ class shellSO1(cmd.Cmd):
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help usuario')
             registroErrores(comando)
-        
-        print('Con este comando se crea un usuario')
     #11.  El usuario debe poder levantar y apagar demonios dentro del sistema, utilizando una herramienta como service de CentOS. (no puede ser una llamada a sistema a la función service o systemctl)
     def do_demonio(self,arg):
         'Levanta o apaga demonios. Necesita como parametro la accion y el ID de proceso en caso de apagar, y el archivo a ejecutar en caso de levantar. Ejemplo: demonio levantar/apagar <PID>'
@@ -246,7 +231,6 @@ def registroLogin():
     f=open('/var/log/login.log', 'a')
     f.write(mensaje)
     f.close()
-    print(mensaje)
     # hay que registrar en usuario_horarios_log si entra fuera de su horario
 
 
@@ -273,7 +257,6 @@ def registroLog(command):
     f=open('/var/log/registro.log', 'a')
     f.write(mensaje)
     f.close()
-    print(mensaje)
 
 #funcion para registro del log de los errores
 def registroErrores(command):
@@ -282,7 +265,6 @@ def registroErrores(command):
     f=open('/var/log/shell/sistema_error.log', 'a')
     f.write(mensaje)
     f.close()
-    print(mensaje)
 
 def parse(arg):
     return tuple(arg.split())
