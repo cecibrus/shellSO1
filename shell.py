@@ -207,7 +207,7 @@ class shellSO1(cmd.Cmd):
         try:
           os.system(arg)
           registroLog(comando)
-          #registroTransferencia(comando)
+          registroTransferencia(comando)
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help transferencia')
             registroErrores(comando)
@@ -301,6 +301,14 @@ def registroUsuario(args):
     for x in range(3, len(args)): #len(args)-1
         mensaje = mensaje + args[x] + ' '
     f=open('/var/log/usuario.log', 'a')
+    f.write(mensaje)
+    f.close()
+
+#funcion para escribir en el log transferencias ftp/ scp realizadas
+def registroTransferencia(command):
+    fecha=datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
+    mensaje= fecha + command + '\n'
+    f=open('/var/log/Shell_transferencias ', 'a')
     f.write(mensaje)
     f.close()
 
