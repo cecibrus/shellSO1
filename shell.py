@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import getpass
 import signal
+import socket
 import datetime
 
 #todos los comandos se deben poner en bloques de try except en caso de que salten errores,
@@ -210,29 +211,84 @@ class shellSO1(cmd.Cmd):
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help transferencia')
             registroErrores(comando)
+    
+    #15. Cerrar sesion y apagar la maquina       
+    def do_apagar(self,arg):
+        'Cierra sesion y apaga la maquina. Por ejemplo apagar <cant_minutos>'
+        try:
+            comando = ' apagar ' + arg
+            command = 'shutdown -h ' + arg
+            registroLog(comando)
+            registroLogout()
+            os.system(command)
+        except Exception:
+            print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help apagar')
+            registroErrores(comando)
 
- '''def do_apagar(self):
-        'Cierra sesion y apaga la maquina'
-        comando = ' apagar '
-        subprocess.Popen(['shutdown', '-r', '0'])
-        registroLog(comando)
-    def do_reiniciar(self):
-        'Reinicia la maquina'
-        comando = ' reiniciar '
-        subprocess.Popen(['shutdown', '-h', '0'])
-        registroLog(comando)'''
 
+#lee del log /var/log/usuario.log y retorna la linea que contiene al usuario del cual se pidio el horario e IPs
+def read_personal(user):
+    f = open('/var/log/usuario.log', 'r')
+    content = f.readline()
+    with f as openfileobject:
+        for line in openfileobject:
+            exists = line.find(usr)
+            if exists != -1:
+                return line
+    return ""
 
 #registro del login del usuario
 def registroLogin():
     user = getpass.getuser()
-    fecha=datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
-    mensaje='login' + user + ' ' + fecha + '\n'
-    f=open('/var/log/login.log', 'a')
+    ipActual = socket.gethostbyname(socket.gethostname())
+    fecha = datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
+    horaActual = datetime.datetime.now().strftime('%H:%M:%S')
+    info = read_personal(user)
+    if(info == "" or info == '\n'):
+        mensaje=' login ' + user + ' ' + fecha + '\n'
+    else:
+        info = parse(info)
+        horaEntrada = info[2]
+        ip = False
+        if(horaActual < horaEntrada):
+            men1= ' (Login fuera de horario) '
+        for x in range(4, len(info)):
+            if(ipActual == info):
+                ip = True
+        if(ip == False):
+            men2 = ' (La Ip no coincide con su lista de IPs permitidas) '
+        mensaje=' login ' + user + ' ' + fecha + men1 + men2 + '\n'
+    f=open('/var/log/usuario_horarios_log', 'a')
     f.write(mensaje)
     f.close()
-    # hay que registrar en usuario_horarios_log si entra fuera de su horario
 
+
+#registro del logout del usuario
+def registroLogout():
+    user = getpass.getuser()
+    ipActual = socket.gethostbyname(socket.gethostname())
+    fecha = datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
+    horaActual = datetime.datetime.now().strftime('%H:%M:%S')
+    info = read_personal(user)
+    if(info == "" or info == '\n'):
+        mensaje=' logout ' + user + ' ' + fecha + '\n'
+    else:
+        info = parse(info)
+        horaSalida = info[3]
+        ip = False
+        if(horaActual > horaSalida):
+            men1= ' (Logout fuera de horario) '
+        for x in range(4, len(info)):
+            if(ipActual == info):
+                ip = True
+        if(ip == False):
+            men2 = ' (La Ip no coincide con su lista de IPs permitidas) '
+        mensaje=' logout ' + user + ' ' + fecha + men1 + men2 + '\n'
+    f=open('/var/log/usuario_horarios_log', 'a')
+    f.write(mensaje)
+    f.close()
+
+    
 
  #13.  Registrar el inicio de sesión y la salida sesión del usuario. Se puede comparar con los registros de su horario cada vez que inicia/cierra la sesión y si esta fuera del rango escribir en el archivo de log (usuario_horarios_log) un mensaje que aclare que está fuera del rango y deben agregar el lugar desde donde realizó la conexión que también puede estar fuera de sus IPs habilitado.
 def registroUsuario(args):
@@ -240,15 +296,13 @@ def registroUsuario(args):
     #args[2]-> hora de salida
     #args[3]-> IP, hasta args[len(args)-1]
     print("aca se registran las actividades del usuario")
-    #mensaje='usuario: ' + args[0] + '\n horaEntrada:' + args[1] + '\n horaSalida: ' + args[2]
-    #for x in range(3:len(args)-1):
-    #    mensaje=mensaje + 
+    #se agrega la hora de entrada/salida y las Ips permitidas
+    mensaje = 'usuario: ' + args[0] + ' horaEntrada: ' + args[1] + ' horaSalida: ' + args[2] + ' IP: '
+    for x in range(3, len(args)): #len(args)-1
+        mensaje = mensaje + args[x] + ' '
     f=open('/var/log/usuario.log', 'a')
     f.write(mensaje)
     f.close()
-    f.write()
-    #se agrega la hora y la fecha
-    #tambien se tienen que tener las IPs
 
 #funcion para escribir en el log los comandos
 def registroLog(command):
