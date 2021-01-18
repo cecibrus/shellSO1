@@ -135,7 +135,7 @@ class shellSO1(cmd.Cmd):
     def do_contrasenha(self,arg):
         'Cambia la contrasenha del usuario. Es necesario introducir solo el comando'
         comando =' contrasenha ' + arg
-        command = 'passwd' + arg
+        command = 'passwd ' + arg
         try:
             os.system(command)
             registroLog(comando)
@@ -230,35 +230,37 @@ class shellSO1(cmd.Cmd):
 #lee del log /var/log/usuario.log y retorna la linea que contiene al usuario del cual se pidio el horario e IPs
 def read_personal(user):
     f = open('/var/log/usuario.log', 'r')
-    content = f.readline()
-    with f as openfileobject:
-        for line in openfileobject:
-            exists = line.find(usr)
-            if exists != -1:
-                return line
+    while(True):
+        linea = f.readlines()
+        if(linea[1] == user ):
+            return linea
+        if not linea:
+            break
     return ""
+    
 
 #registro del login del usuario
 def registroLogin():
     user = getpass.getuser()
-    ipActual = socket.gethostbyname(socket.gethostname())
+    ipActual = str(socket.gethostbyname(socket.gethostname()))
     fecha = datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
-    horaActual = datetime.datetime.now().strftime('%H:%M:%S')
+    horaActual = str(datetime.datetime.now().strftime('%H:%M:%S'))
     info = read_personal(user)
     if(info == "" or info == '\n'):
         mensaje=' login ' + user + ' ' + fecha + '\n'
     else:
-        info = parse(info)
-        horaEntrada = info[2]
+        horaEntrada = info[3]
+        horaSalida = info[5]
         ip = False
-        if(horaActual < horaEntrada):
+        if not (horaEntrada <= horaActual <= horaSalida):
             men1= ' (Login fuera de horario) '
-        for x in range(4, len(info)):
-            if(ipActual == info):
+        for x in range(7, len(info)):
+            if(ipActual == info[x]):
                 ip = True
-        if(ip == False):
+                break
+        if not ip:
             men2 = ' (La Ip no coincide con su lista de IPs permitidas) '
-        mensaje=' login ' + user + ' ' + fecha + men1 + men2 + '\n'
+        mensaje=' login ' + user + ' ' + fecha + ' -> ' + men1 + men2 + '\n'
     f=open('/var/log/usuario_horarios_log', 'a')
     f.write(mensaje)
     f.close()
@@ -267,27 +269,29 @@ def registroLogin():
 #registro del logout del usuario
 def registroLogout():
     user = getpass.getuser()
-    ipActual = socket.gethostbyname(socket.gethostname())
+    ipActual = str(socket.gethostbyname(socket.gethostname()))
     fecha = datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
-    horaActual = datetime.datetime.now().strftime('%H:%M:%S')
+    horaActual = str(datetime.datetime.now().strftime('%H:%M:%S'))
     info = read_personal(user)
     if(info == "" or info == '\n'):
         mensaje=' logout ' + user + ' ' + fecha + '\n'
     else:
-        info = parse(info)
-        horaSalida = info[3]
+        horaEntrada = info[3]
+        horaSalida = info[5]
         ip = False
-        if(horaActual > horaSalida):
+        if not (horaEntrada <= horaActual <= horaSalida):
             men1= ' (Logout fuera de horario) '
-        for x in range(4, len(info)):
-            if(ipActual == info):
+        for x in range(7, len(info)):
+            if(ipActual == info[x]):
                 ip = True
-        if(ip == False):
+                break
+        if not ip:
             men2 = ' (La Ip no coincide con su lista de IPs permitidas) '
-        mensaje=' logout ' + user + ' ' + fecha + men1 + men2 + '\n'
+        mensaje=' login ' + user + ' ' + fecha + ' -> ' + men1 + men2 + '\n'
     f=open('/var/log/usuario_horarios_log', 'a')
     f.write(mensaje)
     f.close()
+
 
     
 
