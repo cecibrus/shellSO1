@@ -211,7 +211,7 @@ class shellSO1(cmd.Cmd):
         comando= ' shell ' + arg
         #creo que no necesita manejo de errores ya que se hace solo
 
-   #14.  Ejecutar una transferencia por ftp o scp, se debe registrar en el log Shell_transferencias del usuario. 
+    #14.  Ejecutar una transferencia por ftp o scp, se debe registrar en el log Shell_transferencias del usuario. 
     def do_transferencia(self,arg):
         'Hace una transferencia ftp o scp. Por ejemplo  transferencia {ftp | scp}  <PARAMS>'
         #print("ftp o scp")
@@ -230,14 +230,20 @@ class shellSO1(cmd.Cmd):
         'Cierra sesion y apaga la maquina. Por ejemplo apagar <cant_minutos>'
         try:
             comando = ' apagar ' + arg
-            command = 'shutdown -h ' + arg
+            llamada=['shutdown','-h']
+            if(arg==''):
+                llamada.append('now')
+            else:
+                llamada.append(arg)
+            subprocess.call(llamada)
             registroLog(comando)
             registroLogout()
-            os.system(command)
         except Exception as e:
             print(e)
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help apagar')
             registroErrores(comando)
+
+
 
 
 #lee del log /var/log/usuario.log y retorna la linea que contiene al usuario del cual se pidio el horario e IPs
