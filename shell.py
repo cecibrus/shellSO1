@@ -87,10 +87,10 @@ class shellSO1(cmd.Cmd):
         comando= ' creardir ' + arg
         try:
             args=parse(arg)
-            if(args[1]==''):
+            if(len(args)==1): #significa que no especifico destino y se crea en el directorio actual
                 path='./'+arg
             else:
-                path=arg[1]
+                path=arg[1]+arg[0]
             os.mkdir(path)
             registroLog(comando)
         except Exception:
@@ -230,13 +230,20 @@ class shellSO1(cmd.Cmd):
 #lee del log /var/log/usuario.log y retorna la linea que contiene al usuario del cual se pidio el horario e IPs
 def read_personal(user):
     f = open('/var/log/usuario.log', 'r')
-    while(True):
-        linea = f.readlines()
-        if(linea[1] == user ):
-            return linea
-        if not linea:
-            break
-    return ""
+    try:
+        while(True):
+            linea = f.readlines()
+            usr = linea[1]
+            if(usr == user ):
+                return linea
+            if not linea:
+                break
+        return ""
+    except Exception:
+         return ""
+    finally:
+        f.close()
+
     
 
 #registro del login del usuario
@@ -246,6 +253,10 @@ def registroLogin():
     fecha = datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
     horaActual = str(datetime.datetime.now().strftime('%H:%M:%S'))
     info = read_personal(user)
+    #Ejemplo:
+    #info[0]= 'usuario: ' , info[1]= 'userlfs' , info[2]= 'horaEntrada: ' , info[3]= '10:30:00' , info[4]= 'horaSalida: ' ,
+    # info[5]= '20:30:00' , info[6]= 'IP:' , info[7]= '192.168.43.170' .... info[n]= '192.168.43.50'
+    #info = info.split()
     if(info == "" or info == '\n'):
         mensaje=' login ' + user + ' ' + fecha + '\n'
     else:
@@ -260,7 +271,7 @@ def registroLogin():
                 break
         if not ip:
             men2 = ' (La Ip no coincide con su lista de IPs permitidas) '
-        mensaje=' login ' + user + ' ' + fecha + ' -> ' + men1 + men2 + '\n'
+        mensaje=' login ' + user + ' ' + fecha + ' -> ' + men1 + men2 + '\n'  
     f=open('/var/log/usuario_horarios_log', 'a')
     f.write(mensaje)
     f.close()
@@ -273,6 +284,10 @@ def registroLogout():
     fecha = datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
     horaActual = str(datetime.datetime.now().strftime('%H:%M:%S'))
     info = read_personal(user)
+    #Ejemplo:
+    #info[0]= 'usuario: ' , info[1]= 'userlfs' , info[2]= 'horaEntrada: ' , info[3]= '10:30:00' , info[4]= 'horaSalida: ' ,
+    # info[5]= '20:30:00' , info[6]= 'IP:' , info[7]= '192.168.43.170' .... info[n]= '192.168.43.50'
+    #info = info.split()
     if(info == "" or info == '\n'):
         mensaje=' logout ' + user + ' ' + fecha + '\n'
     else:
@@ -287,13 +302,10 @@ def registroLogout():
                 break
         if not ip:
             men2 = ' (La Ip no coincide con su lista de IPs permitidas) '
-        mensaje=' login ' + user + ' ' + fecha + ' -> ' + men1 + men2 + '\n'
+        mensaje=' logout ' + user + ' ' + fecha + ' -> ' + men1 + men2 + '\n'  
     f=open('/var/log/usuario_horarios_log', 'a')
     f.write(mensaje)
     f.close()
-
-
-    
 
  #13.  Registrar el inicio de sesión y la salida sesión del usuario. Se puede comparar con los registros de su horario cada vez que inicia/cierra la sesión y si esta fuera del rango escribir en el archivo de log (usuario_horarios_log) un mensaje que aclare que está fuera del rango y deben agregar el lugar desde donde realizó la conexión que también puede estar fuera de sus IPs habilitado.
 def registroUsuario(args):
