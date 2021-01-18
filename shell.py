@@ -249,19 +249,18 @@ class shellSO1(cmd.Cmd):
 #lee del log /var/log/usuario.log y retorna la linea que contiene al usuario del cual se pidio el horario e IPs
 def read_personal(user):
     f = open('/var/log/usuario.log', 'r')
-    try:
-        while(True):
-            linea = f.readlines()
+    while(True):
+        linea = f.readline()
+        linea = linea.split(" ")
+        if(len(linea) >= 2):
             usr = linea[1]
             if(usr == user ):
+                f.close()
                 return linea
-            if not linea:
-                break
-        return ""
-    except Exception:
-         return ""
-    finally:
-        f.close()
+        if not linea:
+            break
+    f.close()
+    return ""
 
     
 
@@ -276,20 +275,24 @@ def registroLogin():
     #info[0]= 'usuario: ' , info[1]= 'userlfs' , info[2]= 'horaEntrada: ' , info[3]= '10:30:00' , info[4]= 'horaSalida: ' ,
     # info[5]= '20:30:00' , info[6]= 'IP:' , info[7]= '192.168.43.170' .... info[n]= '192.168.43.50'
     #info = info.split()
-    if(info == "" or info == '\n'):
+    if(info == "" or info == '\n' or len(info) == 2):
         mensaje=' login ' + user + ' ' + fecha + '\n'
     else:
         horaEntrada = info[3]
         horaSalida = info[5]
         ip = False
         if not (horaEntrada <= horaActual <= horaSalida):
-            men1= ' (Login fuera de horario) '
+            men1 = ' (Login fuera de horario) '
+        else: 
+            men1 = ' (Login dentro de horario establecido) '
         for x in range(7, len(info)):
             if(ipActual == info[x]):
                 ip = True
                 break
         if not ip:
             men2 = ' (La Ip no coincide con su lista de IPs permitidas) '
+        else:
+           men2 = ' (La Ip coincide con su lista de IPs permitidas) ' 
         mensaje=' login ' + user + ' ' + fecha + ' -> ' + men1 + men2 + '\n'  
     f=open('/var/log/usuario_horarios_log', 'a')
     f.write(mensaje)
@@ -307,20 +310,24 @@ def registroLogout():
     #info[0]= 'usuario: ' , info[1]= 'userlfs' , info[2]= 'horaEntrada: ' , info[3]= '10:30:00' , info[4]= 'horaSalida: ' ,
     # info[5]= '20:30:00' , info[6]= 'IP:' , info[7]= '192.168.43.170' .... info[n]= '192.168.43.50'
     #info = info.split()
-    if(info == "" or info == '\n'):
+    if(info == "" or info == '\n' or len(info) == 2):
         mensaje=' logout ' + user + ' ' + fecha + '\n'
     else:
         horaEntrada = info[3]
         horaSalida = info[5]
         ip = False
         if not (horaEntrada <= horaActual <= horaSalida):
-            men1= ' (Logout fuera de horario) '
+            men1 = ' (Logout fuera de horario) '
+        else: 
+            men1 = ' (Logout dentro de horario establecido) '
         for x in range(7, len(info)):
             if(ipActual == info[x]):
                 ip = True
                 break
         if not ip:
             men2 = ' (La Ip no coincide con su lista de IPs permitidas) '
+        else:
+           men2 = ' (La Ip coincide con su lista de IPs permitidas) ' 
         mensaje=' logout ' + user + ' ' + fecha + ' -> ' + men1 + men2 + '\n'  
     f=open('/var/log/usuario_horarios_log', 'a')
     f.write(mensaje)
