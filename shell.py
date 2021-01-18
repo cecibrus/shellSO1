@@ -137,8 +137,8 @@ class shellSO1(cmd.Cmd):
         comando =' contrasenha ' + arg
         command = 'passwd' + arg
         try:
-            os.system()
-            registroLog(command)
+            os.system(command)
+            registroLog(comando)
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help contrasenha')
             registroErrores(comando)
