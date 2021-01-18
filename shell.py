@@ -74,7 +74,6 @@ class shellSO1(cmd.Cmd):
         comando=' listar ' + arg
         try:
             if(arg==''):
-                print('null')
                 lista=os.listdir(path='.')
             else:
                 lista=os.listdir(path=arg)
