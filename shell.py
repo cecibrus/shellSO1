@@ -247,6 +247,7 @@ class shellSO1(cmd.Cmd):
 
 
 #lee del log /var/log/usuario.log y retorna la linea que contiene al usuario del cual se pidio el horario e IPs
+
 def read_personal(user):
     f = open('/var/log/usuario.log', 'r')
     while(True):
@@ -261,9 +262,7 @@ def read_personal(user):
             break
     f.close()
     return ""
-
-    
-
+ 
 #registro del login del usuario
 def registroLogin():
     user = getpass.getuser()
