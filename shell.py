@@ -134,10 +134,11 @@ class shellSO1(cmd.Cmd):
     #9. 	Cambiar la contraseña - contraseña
     def do_contrasenha(self,arg):
         'Cambia la contrasenha del usuario. Es necesario introducir solo el comando'
-        comando=' contrasenha ' + arg
+        comando =' contrasenha ' + arg
+        command = 'passwd' + arg
         try:
-            os.system('passwd')
-            registroLog(comadno)
+            os.system()
+            registroLog(command)
         except Exception:
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help contrasenha')
             registroErrores(comando)
@@ -150,7 +151,7 @@ class shellSO1(cmd.Cmd):
             if(len(args)>1):
                 #si tiene mas de dos argumentos se registran los datos de entrada etc.
                 registroUsuario(args)
-            comandou='useradd ' + args[0] #se agrega el usuario con solo su direccion ip, los datos personales se registran en otro log
+            comandou='useradd -m ' + args[0] #se agrega el usuario con solo su direccion ip, los datos personales se registran en otro log
             os.system(comandou)
             registroLog(comando)
             print(comandou)
