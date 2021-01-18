@@ -1,4 +1,4 @@
-# shellSO1 - Manual básico de uso del shell.
+# shellSO1 - Manual básico de uso.
 Lo primero para empezar la instalación del shell es contar con el archivo shell.py en algun directorio. Es necesario descargarlo de https://github.com/cecibrus/shellSO1, colocarlo en un directorio y darle permisos de ejecución. Recomendamos descargarlo en el directorio /usr/local/bin, si se cuenta con la aplicación git, estos serían los pasos para instalar el shell:
 
 cd /usr/local/bin/
