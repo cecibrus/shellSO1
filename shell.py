@@ -39,7 +39,8 @@ class shellSO1(cmd.Cmd):
         try:
             shutil.copy(*parse(arg))
             registroLog(comando)
-        except Exception:
+        except Exception as e:
+            print(e)
             print("Ocurrio algun error o el comando no se esta utilizando correctamente. Vea la ayuda con help copiar")
             registroErrores(comando)
     #2. 	Mover - mover
@@ -51,7 +52,8 @@ class shellSO1(cmd.Cmd):
             comandom='mv '+ arg
             os.system(comandom)
             registroLog(comando)
-        except Exception:
+        except Exception as e:
+            print(e)
             print("Ocurrio algun error o el comando no se esta utilizando correctamente. Vea la ayuda con help mover")
             registroErrores(comando)
     #3. 	Renombrar - renombrar
@@ -61,7 +63,8 @@ class shellSO1(cmd.Cmd):
         try:
             os.rename(*parse(arg))
             registroLog(comando)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help renombrar')
             registroErrores(comando)
     #4. 	Listar un directorio (no puede ser una llamada a sistema a la función ls) - listar
@@ -78,7 +81,8 @@ class shellSO1(cmd.Cmd):
             for x in lista:
                 print(x)
             registroLog(comando)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help listar')
             registroErrores(comando)
     #5. 	Crear un directorio - creardir
@@ -93,7 +97,8 @@ class shellSO1(cmd.Cmd):
                 path=arg[1]+arg[0]
             os.mkdir(path)
             registroLog(comando)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help creardir')
             registroErrores(comando)
     #6. 	Cambiar de directorio (no puede ser una llamada a sistema a la función cd) - ir
@@ -107,7 +112,8 @@ class shellSO1(cmd.Cmd):
             else:
                 os.chdir(arg)
             registroLog(comando)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help ir')
             registroErrores(comando)
     #7. 	Cambiar los permisos sobre un archivo o un conjunto de archivos - permisos
@@ -117,7 +123,8 @@ class shellSO1(cmd.Cmd):
         try: 
             os.chmod(*parse(arg))
             registroLog(comando)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help permisos')
             registroErrores(comando)
     #8. 	Cambiar los propietarios sobre un archivo o un conjunto de archivos. - propietario
@@ -128,7 +135,8 @@ class shellSO1(cmd.Cmd):
         try:
             shutil.chown(*parse(arg)) #--> es de mas alto nivel que el de os
             registroLog(comando)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help propietario')
             registroErrores(comando)
     #9. 	Cambiar la contraseña - contraseña
@@ -139,7 +147,8 @@ class shellSO1(cmd.Cmd):
         try:
             os.system(command)
             registroLog(comando)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help contrasenha')
             registroErrores(comando)
     #10.  Agregar usuario, y deben registrar los datos personales del mismo incluyendo su horario de trabajo y posibles lugares de conexión (ejemplo IPs o localhost). - usuario
@@ -155,7 +164,8 @@ class shellSO1(cmd.Cmd):
             os.system(comandou)
             registroLog(comando)
             print(comandou)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help usuario')
             registroErrores(comando)
     #11.  El usuario debe poder levantar y apagar demonios dentro del sistema, utilizando una herramienta como service de CentOS. (no puede ser una llamada a sistema a la función service o systemctl)
@@ -184,7 +194,8 @@ class shellSO1(cmd.Cmd):
                     print(e)
                     print('Ocurrio un error o el parametro introducido es invalido. Vea la ayuda con help demonio')
                     registroErrores(comando)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ocurrio un error o el comando se utilizo incorrectamente. Vea la ayuda con help demonio')
             registroErrores(comando)
 
@@ -209,7 +220,8 @@ class shellSO1(cmd.Cmd):
           os.system(arg)
           registroLog(comando)
           registroTransferencia(comando)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help transferencia')
             registroErrores(comando)
     
@@ -222,7 +234,8 @@ class shellSO1(cmd.Cmd):
             registroLog(comando)
             registroLogout()
             os.system(command)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ocurrio un error o el comando no se esta utilizando correctamente. Vea la ayuda con help apagar')
             registroErrores(comando)
 
