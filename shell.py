@@ -252,16 +252,17 @@ def read_personal(user):
     f = open('/var/log/usuario.log', 'r')
     while(True):
         linea = f.readline()
-        linea = linea.split(" ")
-        if(len(linea) >= 2):
-            usr = linea[1]
+        lineas = parse(linea)
+        if(len(lineas) >= 2):
+            usr = lineas[1]
             if(usr == user ):
                 f.close()
-                return linea
+                return lineas
         if not linea:
             break
     f.close()
     return ""
+
  
 #registro del login del usuario
 def registroLogin():
