@@ -94,7 +94,7 @@ class shellSO1(cmd.Cmd):
             if(len(args)==1): #significa que no especifico destino y se crea en el directorio actual
                 path='./'+arg
             else:
-                path=arg[1]+arg[0]
+                path=args[1]+args[0]
             os.mkdir(path)
             registroLog(comando)
         except Exception as e:
